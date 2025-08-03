@@ -1,0 +1,20 @@
+name: Notify Salesforce Deployment
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Notify Salesforce
+        run: |
+          curl -X POST https://orgfarm-f2605941bc-dev-ed.develop.my.salesforce-sites.com/services/apexrest/deployments \
+          -H "Content-Type: application/json" \
+          -d '{
+                "commit": "${{ github.event.pull_request.title }}",
+                "status": "Success",
+                "user": "${{ github.actor }}"
+              }'
